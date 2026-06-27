@@ -1,16 +1,226 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" data-theme="dark">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VeClean©</title>
-    <link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VeClean — Vetorização de Imagens</title>
+
+    <!-- Ícones Tabler (gratuitos, carregados via CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+    <!-- Nossa folha de estilos -->
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-    <script src="./app.js"></script>
+    <!-- ═══════════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════════ -->
+    <nav class="navbar">
+        <div class="navbar-logo">Vec<span>Clean</span></div>
+        <div class="navbar-links">
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#formatos">Formatos</a>
+            <a href="https://github.com/Brrn91/veclean" target="_blank">
+                <i class="ti ti-brand-github"></i> GitHub
+            </a>
+            <!-- Botão que alterna entre tema claro e escuro -->
+            <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+                <i class="ti ti-moon" id="themeIcon"></i>
+                <span id="themeLabel">Tema claro</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════
+       HERO — Apresentação principal
+  ════════════════════════════════════════ -->
+    <section class="hero">
+        <div class="hero-glow"></div>
+        <div class="badge">
+            <span class="badge-dot"></span>
+            Open Source · 100% gratuito
+        </div>
+        <h1>Transforme imagens em<br /><span class="highlight">arte vetorial</span> limpa</h1>
+        <p class="hero-sub">
+            Envie qualquer imagem e obtenha um resultado com cores sólidas, sem degradês,
+            sem texturas — como se fosse vetorizado manualmente no Illustrator.
+        </p>
+        <div class="hero-btns">
+            <button class="btn-primary"
+                onclick="document.getElementById('dropZone').scrollIntoView({behavior:'smooth'})">
+                <i class="ti ti-upload"></i> Enviar imagem
+            </button>
+            <a href="https://github.com/Brrn91/veclean" target="_blank" class="btn-outline">
+                <i class="ti ti-brand-github"></i> Ver no GitHub
+            </a>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       UPLOAD — Área principal do app
+  ════════════════════════════════════════ -->
+    <section class="upload-section">
+
+        <!-- Estado 1: Drop Zone (visível no início) -->
+        <div class="drop-zone" id="dropZone">
+            <i class="ti ti-photo-up drop-icon"></i>
+            <p class="drop-title">Arraste e solte sua imagem aqui</p>
+            <p class="drop-desc">Ou clique para selecionar · Também aceita <kbd>Ctrl+V</kbd> para colar</p>
+            <div class="format-chips">
+                <span class="chip">JPG</span>
+                <span class="chip">PNG</span>
+                <span class="chip">WEBP</span>
+                <span class="chip">GIF</span>
+                <span class="chip">BMP</span>
+            </div>
+            <!-- Input de arquivo oculto — ativado pelo clique na drop zone -->
+            <input type="file" id="fileInput" accept="image/*" hidden />
+        </div>
+
+        <!-- Estado 2: Processing (visível durante o processamento) -->
+        <div class="processing-state hidden" id="processingState">
+            <div class="spinner"></div>
+            <p class="processing-title">Processando sua imagem...</p>
+            <p class="processing-desc">Removendo gradientes e simplificando cores</p>
+        </div>
+
+        <!-- Estado 3: Result (visível após o processamento) -->
+        <div class="result-state hidden" id="resultState">
+            <div class="result-preview">
+
+                <!-- Preview: imagem original -->
+                <div class="preview-box">
+                    <p class="preview-label">Original</p>
+                    <img id="previewOriginal" src="" alt="Imagem original" />
+                </div>
+
+                <!-- Preview: imagem processada -->
+                <div class="preview-box">
+                    <p class="preview-label">Vetorizado</p>
+                    <!-- O SVG processado será inserido aqui via JavaScript -->
+                    <div id="previewResult"></div>
+                </div>
+
+            </div>
+
+            <!-- Botões de exportação -->
+            <div class="export-bar">
+                <p class="export-label">Exportar como:</p>
+                <div class="export-btns">
+                    <button class="btn-export" onclick="exportFile('svg')">
+                        <i class="ti ti-file-vector"></i> SVG
+                    </button>
+                    <button class="btn-export" onclick="exportFile('eps')">
+                        <i class="ti ti-file-code"></i> EPS
+                    </button>
+                    <button class="btn-export" onclick="exportFile('pdf')">
+                        <i class="ti ti-file-type-pdf"></i> PDF
+                    </button>
+                    <button class="btn-export" onclick="exportFile('webp')">
+                        <i class="ti ti-photo"></i> WEBP
+                    </button>
+                </div>
+                <!-- Botão para processar nova imagem -->
+                <button class="btn-outline" id="newImageBtn" onclick="resetApp()">
+                    <i class="ti ti-refresh"></i> Nova imagem
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FEATURES — O que o Veclean faz
+  ════════════════════════════════════════ -->
+    <section class="features" id="como-funciona">
+        <p class="section-label">O que fazemos</p>
+        <h2 class="section-title">Processamento inteligente de imagem</h2>
+        <p class="section-sub">Sem APIs pagas. Tudo processado com bibliotecas open source.</p>
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon"><i class="ti ti-shadow-off"></i></div>
+                <h3>Remove degradês e sombras</h3>
+                <p>Elimina transições graduais de cor, mantendo apenas cores sólidas e definidas.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="ti ti-texture"></i></div>
+                <h3>Remove texturas</h3>
+                <p>Superfícies texturizadas viram áreas lisas e uniformes de cor única.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="ti ti-typography"></i></div>
+                <h3>Preserva textos e fontes</h3>
+                <p>Escritas e logotipos são detectados e mantidos com máxima fidelidade.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="ti ti-palette"></i></div>
+                <h3>Cores sólidas e limpas</h3>
+                <p>Resultado final com paleta reduzida, ideal para impressão e corte a laser.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       HOW IT WORKS — Passo a passo
+  ════════════════════════════════════════ -->
+    <section class="how-it-works">
+        <p class="section-label">Passo a passo</p>
+        <h2 class="section-title">Como funciona</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <h3>Envie sua imagem</h3>
+                    <p>Arraste, cole com Ctrl+V ou clique para selecionar. Aceita imagens de qualquer qualidade.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <h3>Processamento automático</h3>
+                    <p>O sistema remove ruídos, simplifica cores e vetoriza os contornos mantendo textos intactos.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <h3>Baixe no formato que preferir</h3>
+                    <p>Exporte em SVG, EPS, PDF ou WEBP com um clique.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FORMATS — Formatos de exportação
+  ════════════════════════════════════════ -->
+    <section class="formats" id="formatos">
+        <p class="section-label">Exportação</p>
+        <h2 class="section-title">Múltiplos formatos de saída</h2>
+        <p class="section-sub">Compatível com Illustrator, Corel Draw, Figma e qualquer ferramenta profissional.</p>
+        <div class="format-pills">
+            <div class="format-pill"><span class="dot dot-purple"></span> SVG — Vetorial para web e edição</div>
+            <div class="format-pill"><span class="dot dot-blue"></span> EPS — Para impressão e Illustrator</div>
+            <div class="format-pill"><span class="dot dot-red"></span> PDF — Universal e profissional</div>
+            <div class="format-pill"><span class="dot dot-green"></span> WEBP — Imagem otimizada para web</div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════ -->
+    <footer class="footer">
+        <p>Veclean · Open Source · Sem custo</p>
+        <div class="footer-badge"><i class="ti ti-heart"></i> Feito para a comunidade</div>
+    </footer>
+
+    <!-- Nosso JavaScript -->
+    <script src="app.js"></script>
+
 </body>
 
 </html>

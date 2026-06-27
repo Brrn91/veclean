@@ -1,0 +1,12 @@
+# Dependências (serão instaladas via npm install)
+node_modules/
+
+# Variáveis de ambiente (nunca sobe pro GitHub!)
+.env
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Uploads temporários
+backend/uploads/
