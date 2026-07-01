@@ -78,6 +78,29 @@
             </div>
             <!-- Input de arquivo oculto — ativado pelo clique na drop zone -->
             <input type="file" id="fileInput" accept="image/*" hidden />
+
+            <!-- Separador visual -->
+            <div class="color-control">
+                <div class="color-control-header">
+                    <span class="color-control-label">Número de cores</span>
+                    <!-- Mostra o valor atual do slider em tempo real -->
+                    <span class="color-control-value" id="colorCountDisplay">Automático</span>
+                </div>
+                <!--
+          Slider de 0 a 4:
+          0 = automático (o sistema decide)
+          1, 2, 3, 4 = número fixo de cores
+        -->
+                <input type="range" id="colorSlider" min="0" max="4" value="0" step="1" class="color-slider" />
+                <div class="color-slider-labels">
+                    <span>Auto</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                </div>
+            </div>
+
         </div>
 
         <!-- Estado 2: Processing (visível durante o processamento) -->

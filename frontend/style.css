@@ -662,6 +662,83 @@ a {
 }
 
 /* ═══════════════════════════════════════════
+   CONTROLE DE CORES (SLIDER)
+════════════════════════════════════════════ */
+.color-control {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  text-align: left;
+  /* Impede que o clique no slider abra o seletor de arquivo */
+  /* (a drop zone inteira é clicável, então precisamos parar a propagação no JS) */
+}
+
+.color-control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.color-control-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.color-control-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--purple-light);
+  min-width: 70px;
+  text-align: right;
+}
+
+/* O slider em si — estilizado para combinar com o tema */
+.color-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+/* A bolinha que o usuário arrasta */
+.color-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--purple);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+.color-slider::-webkit-slider-thumb:hover {
+  background: var(--purple-light);
+  transform: scale(1.2);
+}
+
+/* Labels abaixo do slider (Auto, 2, 3, 4, 5) */
+.color-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.color-slider-labels span {
+  font-size: 0.7rem;
+  color: var(--muted);
+  width: 20px;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVIDADE
 ════════════════════════════════════════════ */
 @media (max-width: 600px) {
