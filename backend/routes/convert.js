@@ -47,9 +47,13 @@ router.post("/", upload.single("image"), async (req, res) => {
 
     // req.file.buffer contém os bytes da imagem em memória
     // Passa para o serviço de processamento
+    // Pega o número de cores enviado pelo frontend (ou 'auto' se não enviado)
+    const colorCount = req.body.colorCount || "auto";
+
     const result = await imageProcessor.process(
       req.file.buffer,
       req.file.mimetype,
+      colorCount,
     );
 
     // Retorna o SVG processado como resposta

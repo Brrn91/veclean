@@ -46,6 +46,20 @@ const previewResult = document.getElementById("previewResult");
 // Guarda o SVG retornado pelo backend para usar na exportação
 let currentSVG = null;
 
+// Referência ao slider e ao display de valor
+const colorSlider = document.getElementById("colorSlider");
+const colorCountDisplay = document.getElementById("colorCountDisplay");
+
+// Atualiza o texto ao lado do slider em tempo real conforme o usuário arrasta
+colorSlider.addEventListener("input", (e) => {
+  const val = parseInt(e.target.value);
+  colorCountDisplay.textContent = val === 0 ? "Automático" : `${val + 1} cores`;
+});
+
+// Impede que clicar no slider abra o seletor de arquivo
+// (sem isso, clicar no slider ativaria o clique da drop zone)
+colorSlider.addEventListener("click", (e) => e.stopPropagation());
+
 // ═══════════════════════════════════════════
 // EVENTOS DA DROP ZONE
 // ═══════════════════════════════════════════
@@ -128,6 +142,12 @@ async function uploadImage(file) {
   const formData = new FormData();
   formData.append("image", file); // 'image' deve bater com upload.single('image') no backend
 
+  // Pega o valor atual do slider e envia junto com a imagem
+  // 0 = automático, 2-5 = número fixo de cores
+  const sliderValue = parseInt(colorSlider.value);
+  const colorCount = sliderValue === 0 ? "auto" : String(sliderValue + 1);
+  formData.append("colorCount", colorCount);
+
   try {
     // Faz a requisição POST para o backend
     const response = await fetch("/api/convert", {
@@ -179,6 +199,9 @@ function resetApp() {
   previewResult.innerHTML = "";
   fileInput.value = ""; // limpa o input de arquivo
   showState("drop");
+  // Reseta o slider para automático
+  colorSlider.value = 0;
+  colorCountDisplay.textContent = "Automático";
 }
 
 // ═══════════════════════════════════════════
